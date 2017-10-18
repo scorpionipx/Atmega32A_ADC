@@ -124,6 +124,18 @@
     <Compile Include="adc_driver.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="global.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hx1230.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hx1230.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hx_8x6_characters.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>

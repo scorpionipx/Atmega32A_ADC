@@ -38,6 +38,7 @@ SUBDIRS :=
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
 ../adc_driver.c \
+../hx1230.c \
 ../main.c
 
 
@@ -49,18 +50,22 @@ ASM_SRCS +=
 
 OBJS +=  \
 adc_driver.o \
+hx1230.o \
 main.o
 
 OBJS_AS_ARGS +=  \
 adc_driver.o \
+hx1230.o \
 main.o
 
 C_DEPS +=  \
 adc_driver.d \
+hx1230.d \
 main.d
 
 C_DEPS_AS_ARGS +=  \
 adc_driver.d \
+hx1230.d \
 main.d
 
 OUTPUT_FILE_PATH +=Atmega32A_ADC.elf
@@ -77,6 +82,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 

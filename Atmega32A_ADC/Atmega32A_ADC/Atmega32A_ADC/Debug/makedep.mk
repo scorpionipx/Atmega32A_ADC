@@ -4,5 +4,7 @@
 
 adc_driver.c
 
+hx1230.c
+
 main.c
 
