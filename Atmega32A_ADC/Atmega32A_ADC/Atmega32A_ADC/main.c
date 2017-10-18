@@ -39,10 +39,7 @@ int main(void)
 		adc_value = ADC_get_value(adc_channel);
 		
 		hx_set_coordinates((adc_channel / 4) * HX_MAX_COL / 2 + 18, (adc_channel % 4) + 3);
-		hx_write_char(HX_ch_0);
-		hx_write_char(HX_ch_0);
-		hx_write_char(HX_ch_0);
-		hx_write_char(HX_ch_0);
+		hx_write_char(HX_character['0']);
 		
 		adc_channel ++;
 		adc_channel %= 8;
@@ -64,147 +61,79 @@ void display_title(void)
 		hx_send_data(0);
 	}
 	
-	hx_write_char(HX_ch_S);
-	hx_write_char(HX_ch_C);
-	hx_write_char(HX_ch_O);
-	hx_write_char(HX_ch_R);
-	hx_write_char(HX_ch_P);
-	hx_write_char(HX_ch_I);
-	hx_write_char(HX_ch_O);
-	hx_write_char(HX_ch_N);
-	hx_write_char(HX_ch_I);
-	hx_write_char(HX_ch_P);
-	hx_write_char(HX_ch_X);
+	hx_write_char(HX_character['S']);
+	hx_write_char(HX_character['c']);
+	hx_write_char(HX_character['o']);
+	hx_write_char(HX_character['r']);
+	hx_write_char(HX_character['p']);
+	hx_write_char(HX_character['i']);
+	hx_write_char(HX_character['o']);
+	hx_write_char(HX_character['n']);
+	hx_write_char(HX_character['I']);
+	hx_write_char(HX_character['P']);
+	hx_write_char(HX_character['X']);
 	
 	hx_set_coordinates(0, 1);
 	
 	for(char i=0; i<10; i++)
 	{
 		hx_send_data(0);
-	}	
-	hx_write_char(HX_ch_A);
-	hx_write_char(HX_ch_T);
-	hx_write_char(HX_ch_M);
-	hx_write_char(HX_ch_E);
-	hx_write_char(HX_ch_G);
-	hx_write_char(HX_ch_A);
-	hx_write_char(HX_ch_3);
-	hx_write_char(HX_ch_2);
-	hx_write_char(HX_ch_A);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_write_char(HX_ch_A);
-	hx_write_char(HX_ch_D);
-	hx_write_char(HX_ch_C);
+	}
+
+	hx_write_char(HX_character['A']);
+	hx_write_char(HX_character['t']);
+	hx_write_char(HX_character['m']);
+	hx_write_char(HX_character['e']);
+	hx_write_char(HX_character['g']);
+	hx_write_char(HX_character['a']);
+	hx_write_char(HX_character['3']);
+	hx_write_char(HX_character['2']);
+	hx_write_char(HX_character['A']);
+	hx_write_char(HX_character[' ']);
+	hx_write_char(HX_character['A']);
+	hx_write_char(HX_character['D']);
+	hx_write_char(HX_character['C']);
 }
 
 void display_menu(void)
 {
 	hx_set_coordinates(0, 3);
 	
-	hx_write_char(HX_ch_A);
-	hx_write_char(HX_ch_1);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_write_char(HX_ch_N);
-	hx_write_char(HX_ch_A);
+	hx_write_char(HX_character['A']);
+	hx_write_char(HX_character['1']);
 	
 	hx_set_coordinates(0, 4);
 	
-	hx_write_char(HX_ch_A);
-	hx_write_char(HX_ch_2);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_write_char(HX_ch_N);
-	hx_write_char(HX_ch_A);
+	hx_write_char(HX_character['A']);
+	hx_write_char(HX_character['2']);
 	
 	hx_set_coordinates(0, 5);
 	
-	hx_write_char(HX_ch_A);
-	hx_write_char(HX_ch_3);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_write_char(HX_ch_N);
-	hx_write_char(HX_ch_A);
+	hx_write_char(HX_character['A']);
+	hx_write_char(HX_character['3']);
 	
 	hx_set_coordinates(0, 6);
 	
-	hx_write_char(HX_ch_A);
-	hx_write_char(HX_ch_4);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_write_char(HX_ch_N);
-	hx_write_char(HX_ch_A);
+	hx_write_char(HX_character['A']);
+	hx_write_char(HX_character['4']);
 	
 	hx_set_coordinates(HX_MAX_COL / 2, 3);
 	
-	hx_write_char(HX_ch_A);
-	hx_write_char(HX_ch_5);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_write_char(HX_ch_N);
-	hx_write_char(HX_ch_A);
+	hx_write_char(HX_character['A']);
+	hx_write_char(HX_character['5']);
 	
 	hx_set_coordinates(HX_MAX_COL / 2, 4);
 	
-	hx_write_char(HX_ch_A);
-	hx_write_char(HX_ch_6);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_write_char(HX_ch_N);
-	hx_write_char(HX_ch_A);
+	hx_write_char(HX_character['A']);
+	hx_write_char(HX_character['6']);
 	
 	hx_set_coordinates(HX_MAX_COL / 2, 5);
 	
-	hx_write_char(HX_ch_A);
-	hx_write_char(HX_ch_7);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_write_char(HX_ch_N);
-	hx_write_char(HX_ch_A);
+	hx_write_char(HX_character['A']);
+	hx_write_char(HX_character['7']);
 	
 	hx_set_coordinates(HX_MAX_COL / 2, 6);
 	
-	hx_write_char(HX_ch_A);
-	hx_write_char(HX_ch_8);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_send_data(0);
-	hx_write_char(HX_ch_N);
-	hx_write_char(HX_ch_A);
+	hx_write_char(HX_character['A']);
+	hx_write_char(HX_character['8']);
 }

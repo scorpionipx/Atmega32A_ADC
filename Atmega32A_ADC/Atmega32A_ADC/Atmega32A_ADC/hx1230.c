@@ -147,7 +147,7 @@ void hx_fill_screen(void)
 	}
 }
 
-void hx_write_char(const hx_8x6_character _character)
+void hx_write_char(const unsigned char *_character)
 {
 	for(int row_index = 0; row_index < 6; row_index ++)
 	{
