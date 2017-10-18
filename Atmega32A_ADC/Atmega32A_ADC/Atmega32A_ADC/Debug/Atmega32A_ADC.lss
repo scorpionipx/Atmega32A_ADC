@@ -13,19 +13,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   4 .debug_aranges 000000a8  00000000  00000000  000007b4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   00001c09  00000000  00000000  0000085c  2**0
+  5 .debug_info   00001f57  00000000  00000000  0000085c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000811  00000000  00000000  00002465  2**0
+  6 .debug_abbrev 00000832  00000000  00000000  000027b3  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000a2f  00000000  00000000  00002c76  2**0
+  7 .debug_line   00000a46  00000000  00000000  00002fe5  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000138  00000000  00000000  000036a8  2**2
+  8 .debug_frame  00000138  00000000  00000000  00003a2c  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    000004fa  00000000  00000000  000037e0  2**0
+  9 .debug_str    000005d3  00000000  00000000  00003b64  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00000655  00000000  00000000  00003cda  2**0
+ 10 .debug_loc    00000655  00000000  00000000  00004137  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000078  00000000  00000000  0000432f  2**0
+ 11 .debug_ranges 00000078  00000000  00000000  0000478c  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -80,51 +80,22 @@ Disassembly of section .text:
   7e:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 00000082 <ADC_init>:
-
-#include <avr/io.h>
-
-void ADC_init(void)
-{
-	DDRA = 0x00;
   82:	1a ba       	out	0x1a, r1	; 26
-	// AREF = AVcc
-	ADMUX = (1<<REFS0);
   84:	80 e4       	ldi	r24, 0x40	; 64
   86:	87 b9       	out	0x07, r24	; 7
-	
-	// ADC Enable and prescaler of 128
-	// 16000000/128 = 125000
-	ADCSRA = (1<<ADEN)|(1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0);
   88:	87 e8       	ldi	r24, 0x87	; 135
   8a:	86 b9       	out	0x06, r24	; 6
   8c:	08 95       	ret
 
 0000008e <ADC_get_value>:
-{
-	// select the corresponding channel 0~7
-	// ANDing with '7' will always keep the value
-	// of 'ch' between 0 and 7
-	ch &= 0b00000111;  // AND operation with 7
-	ADMUX = (ADMUX & 0xF8)|ch;     // clears the bottom 3 bits before ORing
   8e:	97 b1       	in	r25, 0x07	; 7
   90:	98 7f       	andi	r25, 0xF8	; 248
   92:	87 70       	andi	r24, 0x07	; 7
   94:	89 2b       	or	r24, r25
   96:	87 b9       	out	0x07, r24	; 7
-	
-	// start single conversion
-	// write '1' to ADSC
-	ADCSRA |= (1<<ADSC);
   98:	36 9a       	sbi	0x06, 6	; 6
-	
-	// wait for conversion to complete
-	// ADSC becomes '0' again
-	// till then, run loop continuously
-	while(ADCSRA & (1<<ADSC));
   9a:	36 99       	sbic	0x06, 6	; 6
   9c:	fe cf       	rjmp	.-4      	; 0x9a <ADC_get_value+0xc>
-	
-	return (ADC);
   9e:	84 b1       	in	r24, 0x04	; 4
   a0:	95 b1       	in	r25, 0x05	; 5
   a2:	08 95       	ret
@@ -270,7 +241,7 @@ void hx_send_command(unsigned char _command)
  10a:	08 95       	ret
 
 0000010c <init_hx1230_control>:
-#include <util/delay.h>
+#include "hx_8x6_characters.h"
 
 void init_hx1230_control(void)
 {
@@ -499,7 +470,7 @@ void hx_fill_screen(void)
 
 000001f4 <hx_write_char>:
 
-void hx_write_char(const unsigned char *_character)
+void hx_write_char(const hx_8x6_character _character)
 {
  1f4:	0f 93       	push	r16
  1f6:	1f 93       	push	r17
@@ -511,20 +482,20 @@ void hx_write_char(const unsigned char *_character)
  202:	1f 4f       	sbci	r17, 0xFF	; 255
 	for(int row_index = 0; row_index < 6; row_index ++)
 	{
-		hx_send_data((unsigned char)_character[row_index]);
+		hx_send_data(_character[row_index]);
  204:	89 91       	ld	r24, Y+
  206:	0e 94 52 00 	call	0xa4	; 0xa4 <hx_send_data>
 	}
 }
 
-void hx_write_char(const unsigned char *_character)
+void hx_write_char(const hx_8x6_character _character)
 {
 	for(int row_index = 0; row_index < 6; row_index ++)
  20a:	c0 17       	cp	r28, r16
  20c:	d1 07       	cpc	r29, r17
  20e:	d1 f7       	brne	.-12     	; 0x204 <hx_write_char+0x10>
 	{
-		hx_send_data((unsigned char)_character[row_index]);
+		hx_send_data(_character[row_index]);
 	}
  210:	df 91       	pop	r29
  212:	cf 91       	pop	r28
@@ -564,47 +535,47 @@ void display_title(void)
 		hx_send_data(0);
 	}
 	
-	hx_write_char(hx_S);
+	hx_write_char(HX_ch_S);
  230:	82 ea       	ldi	r24, 0xA2	; 162
  232:	90 e0       	ldi	r25, 0x00	; 0
  234:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_C);
+	hx_write_char(HX_ch_C);
  238:	8e ed       	ldi	r24, 0xDE	; 222
  23a:	90 e0       	ldi	r25, 0x00	; 0
  23c:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_O);
+	hx_write_char(HX_ch_O);
  240:	84 eb       	ldi	r24, 0xB4	; 180
  242:	90 e0       	ldi	r25, 0x00	; 0
  244:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_R);
+	hx_write_char(HX_ch_R);
  248:	88 ea       	ldi	r24, 0xA8	; 168
  24a:	90 e0       	ldi	r25, 0x00	; 0
  24c:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_P);
+	hx_write_char(HX_ch_P);
  250:	8e ea       	ldi	r24, 0xAE	; 174
  252:	90 e0       	ldi	r25, 0x00	; 0
  254:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_I);
+	hx_write_char(HX_ch_I);
  258:	86 ec       	ldi	r24, 0xC6	; 198
  25a:	90 e0       	ldi	r25, 0x00	; 0
  25c:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_O);
+	hx_write_char(HX_ch_O);
  260:	84 eb       	ldi	r24, 0xB4	; 180
  262:	90 e0       	ldi	r25, 0x00	; 0
  264:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_N);
+	hx_write_char(HX_ch_N);
  268:	8a eb       	ldi	r24, 0xBA	; 186
  26a:	90 e0       	ldi	r25, 0x00	; 0
  26c:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_I);
+	hx_write_char(HX_ch_I);
  270:	86 ec       	ldi	r24, 0xC6	; 198
  272:	90 e0       	ldi	r25, 0x00	; 0
  274:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_P);
+	hx_write_char(HX_ch_P);
  278:	8e ea       	ldi	r24, 0xAE	; 174
  27a:	90 e0       	ldi	r25, 0x00	; 0
  27c:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_X);
+	hx_write_char(HX_ch_X);
  280:	86 e9       	ldi	r24, 0x96	; 150
  282:	90 e0       	ldi	r25, 0x00	; 0
  284:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
@@ -621,8 +592,8 @@ void display_title(void)
  292:	80 e0       	ldi	r24, 0x00	; 0
  294:	0e 94 52 00 	call	0xa4	; 0xa4 <hx_send_data>
  298:	c1 50       	subi	r28, 0x01	; 1
-	hx_write_char(hx_P);
-	hx_write_char(hx_X);
+	hx_write_char(HX_ch_P);
+	hx_write_char(HX_ch_X);
 	
 	hx_set_coordinates(0, 1);
 	
@@ -631,39 +602,39 @@ void display_title(void)
 	{
 		hx_send_data(0);
 	}	
-	hx_write_char(hx_A);
+	hx_write_char(HX_ch_A);
  29c:	84 ee       	ldi	r24, 0xE4	; 228
  29e:	90 e0       	ldi	r25, 0x00	; 0
  2a0:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_T);
+	hx_write_char(HX_ch_T);
  2a4:	8c e9       	ldi	r24, 0x9C	; 156
  2a6:	90 e0       	ldi	r25, 0x00	; 0
  2a8:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_M);
+	hx_write_char(HX_ch_M);
  2ac:	80 ec       	ldi	r24, 0xC0	; 192
  2ae:	90 e0       	ldi	r25, 0x00	; 0
  2b0:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_E);
+	hx_write_char(HX_ch_E);
  2b4:	82 ed       	ldi	r24, 0xD2	; 210
  2b6:	90 e0       	ldi	r25, 0x00	; 0
  2b8:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_G);
+	hx_write_char(HX_ch_G);
  2bc:	8c ec       	ldi	r24, 0xCC	; 204
  2be:	90 e0       	ldi	r25, 0x00	; 0
  2c0:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_A);
+	hx_write_char(HX_ch_A);
  2c4:	84 ee       	ldi	r24, 0xE4	; 228
  2c6:	90 e0       	ldi	r25, 0x00	; 0
  2c8:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_3);
+	hx_write_char(HX_ch_3);
  2cc:	8e e7       	ldi	r24, 0x7E	; 126
  2ce:	90 e0       	ldi	r25, 0x00	; 0
  2d0:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_2);
+	hx_write_char(HX_ch_2);
  2d4:	84 e8       	ldi	r24, 0x84	; 132
  2d6:	90 e0       	ldi	r25, 0x00	; 0
  2d8:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_A);
+	hx_write_char(HX_ch_A);
  2dc:	84 ee       	ldi	r24, 0xE4	; 228
  2de:	90 e0       	ldi	r25, 0x00	; 0
  2e0:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
@@ -685,15 +656,15 @@ void display_title(void)
 	hx_send_data(0);
  302:	80 e0       	ldi	r24, 0x00	; 0
  304:	0e 94 52 00 	call	0xa4	; 0xa4 <hx_send_data>
-	hx_write_char(hx_A);
+	hx_write_char(HX_ch_A);
  308:	84 ee       	ldi	r24, 0xE4	; 228
  30a:	90 e0       	ldi	r25, 0x00	; 0
  30c:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_D);
+	hx_write_char(HX_ch_D);
  310:	88 ed       	ldi	r24, 0xD8	; 216
  312:	90 e0       	ldi	r25, 0x00	; 0
  314:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_C);
+	hx_write_char(HX_ch_C);
  318:	8e ed       	ldi	r24, 0xDE	; 222
  31a:	90 e0       	ldi	r25, 0x00	; 0
  31c:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
@@ -710,11 +681,11 @@ void display_menu(void)
  326:	80 e0       	ldi	r24, 0x00	; 0
  328:	0e 94 bf 00 	call	0x17e	; 0x17e <hx_set_coordinates>
 	
-	hx_write_char(hx_A);
+	hx_write_char(HX_ch_A);
  32c:	84 ee       	ldi	r24, 0xE4	; 228
  32e:	90 e0       	ldi	r25, 0x00	; 0
  330:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_1);
+	hx_write_char(HX_ch_1);
  334:	8a e8       	ldi	r24, 0x8A	; 138
  336:	90 e0       	ldi	r25, 0x00	; 0
  338:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
@@ -736,11 +707,11 @@ void display_menu(void)
 	hx_send_data(0);
  35a:	80 e0       	ldi	r24, 0x00	; 0
  35c:	0e 94 52 00 	call	0xa4	; 0xa4 <hx_send_data>
-	hx_write_char(hx_N);
+	hx_write_char(HX_ch_N);
  360:	8a eb       	ldi	r24, 0xBA	; 186
  362:	90 e0       	ldi	r25, 0x00	; 0
  364:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_A);
+	hx_write_char(HX_ch_A);
  368:	84 ee       	ldi	r24, 0xE4	; 228
  36a:	90 e0       	ldi	r25, 0x00	; 0
  36c:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
@@ -750,11 +721,11 @@ void display_menu(void)
  372:	80 e0       	ldi	r24, 0x00	; 0
  374:	0e 94 bf 00 	call	0x17e	; 0x17e <hx_set_coordinates>
 	
-	hx_write_char(hx_A);
+	hx_write_char(HX_ch_A);
  378:	84 ee       	ldi	r24, 0xE4	; 228
  37a:	90 e0       	ldi	r25, 0x00	; 0
  37c:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_2);
+	hx_write_char(HX_ch_2);
  380:	84 e8       	ldi	r24, 0x84	; 132
  382:	90 e0       	ldi	r25, 0x00	; 0
  384:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
@@ -776,11 +747,11 @@ void display_menu(void)
 	hx_send_data(0);
  3a6:	80 e0       	ldi	r24, 0x00	; 0
  3a8:	0e 94 52 00 	call	0xa4	; 0xa4 <hx_send_data>
-	hx_write_char(hx_N);
+	hx_write_char(HX_ch_N);
  3ac:	8a eb       	ldi	r24, 0xBA	; 186
  3ae:	90 e0       	ldi	r25, 0x00	; 0
  3b0:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_A);
+	hx_write_char(HX_ch_A);
  3b4:	84 ee       	ldi	r24, 0xE4	; 228
  3b6:	90 e0       	ldi	r25, 0x00	; 0
  3b8:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
@@ -790,11 +761,11 @@ void display_menu(void)
  3be:	80 e0       	ldi	r24, 0x00	; 0
  3c0:	0e 94 bf 00 	call	0x17e	; 0x17e <hx_set_coordinates>
 	
-	hx_write_char(hx_A);
+	hx_write_char(HX_ch_A);
  3c4:	84 ee       	ldi	r24, 0xE4	; 228
  3c6:	90 e0       	ldi	r25, 0x00	; 0
  3c8:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_3);
+	hx_write_char(HX_ch_3);
  3cc:	8e e7       	ldi	r24, 0x7E	; 126
  3ce:	90 e0       	ldi	r25, 0x00	; 0
  3d0:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
@@ -816,11 +787,11 @@ void display_menu(void)
 	hx_send_data(0);
  3f2:	80 e0       	ldi	r24, 0x00	; 0
  3f4:	0e 94 52 00 	call	0xa4	; 0xa4 <hx_send_data>
-	hx_write_char(hx_N);
+	hx_write_char(HX_ch_N);
  3f8:	8a eb       	ldi	r24, 0xBA	; 186
  3fa:	90 e0       	ldi	r25, 0x00	; 0
  3fc:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_A);
+	hx_write_char(HX_ch_A);
  400:	84 ee       	ldi	r24, 0xE4	; 228
  402:	90 e0       	ldi	r25, 0x00	; 0
  404:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
@@ -830,11 +801,11 @@ void display_menu(void)
  40a:	80 e0       	ldi	r24, 0x00	; 0
  40c:	0e 94 bf 00 	call	0x17e	; 0x17e <hx_set_coordinates>
 	
-	hx_write_char(hx_A);
+	hx_write_char(HX_ch_A);
  410:	84 ee       	ldi	r24, 0xE4	; 228
  412:	90 e0       	ldi	r25, 0x00	; 0
  414:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_4);
+	hx_write_char(HX_ch_4);
  418:	88 e7       	ldi	r24, 0x78	; 120
  41a:	90 e0       	ldi	r25, 0x00	; 0
  41c:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
@@ -856,11 +827,11 @@ void display_menu(void)
 	hx_send_data(0);
  43e:	80 e0       	ldi	r24, 0x00	; 0
  440:	0e 94 52 00 	call	0xa4	; 0xa4 <hx_send_data>
-	hx_write_char(hx_N);
+	hx_write_char(HX_ch_N);
  444:	8a eb       	ldi	r24, 0xBA	; 186
  446:	90 e0       	ldi	r25, 0x00	; 0
  448:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_A);
+	hx_write_char(HX_ch_A);
  44c:	84 ee       	ldi	r24, 0xE4	; 228
  44e:	90 e0       	ldi	r25, 0x00	; 0
  450:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
@@ -870,11 +841,11 @@ void display_menu(void)
  456:	80 e3       	ldi	r24, 0x30	; 48
  458:	0e 94 bf 00 	call	0x17e	; 0x17e <hx_set_coordinates>
 	
-	hx_write_char(hx_A);
+	hx_write_char(HX_ch_A);
  45c:	84 ee       	ldi	r24, 0xE4	; 228
  45e:	90 e0       	ldi	r25, 0x00	; 0
  460:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_5);
+	hx_write_char(HX_ch_5);
  464:	82 e7       	ldi	r24, 0x72	; 114
  466:	90 e0       	ldi	r25, 0x00	; 0
  468:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
@@ -896,11 +867,11 @@ void display_menu(void)
 	hx_send_data(0);
  48a:	80 e0       	ldi	r24, 0x00	; 0
  48c:	0e 94 52 00 	call	0xa4	; 0xa4 <hx_send_data>
-	hx_write_char(hx_N);
+	hx_write_char(HX_ch_N);
  490:	8a eb       	ldi	r24, 0xBA	; 186
  492:	90 e0       	ldi	r25, 0x00	; 0
  494:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_A);
+	hx_write_char(HX_ch_A);
  498:	84 ee       	ldi	r24, 0xE4	; 228
  49a:	90 e0       	ldi	r25, 0x00	; 0
  49c:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
@@ -910,11 +881,11 @@ void display_menu(void)
  4a2:	80 e3       	ldi	r24, 0x30	; 48
  4a4:	0e 94 bf 00 	call	0x17e	; 0x17e <hx_set_coordinates>
 	
-	hx_write_char(hx_A);
+	hx_write_char(HX_ch_A);
  4a8:	84 ee       	ldi	r24, 0xE4	; 228
  4aa:	90 e0       	ldi	r25, 0x00	; 0
  4ac:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_6);
+	hx_write_char(HX_ch_6);
  4b0:	8c e6       	ldi	r24, 0x6C	; 108
  4b2:	90 e0       	ldi	r25, 0x00	; 0
  4b4:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
@@ -936,11 +907,11 @@ void display_menu(void)
 	hx_send_data(0);
  4d6:	80 e0       	ldi	r24, 0x00	; 0
  4d8:	0e 94 52 00 	call	0xa4	; 0xa4 <hx_send_data>
-	hx_write_char(hx_N);
+	hx_write_char(HX_ch_N);
  4dc:	8a eb       	ldi	r24, 0xBA	; 186
  4de:	90 e0       	ldi	r25, 0x00	; 0
  4e0:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_A);
+	hx_write_char(HX_ch_A);
  4e4:	84 ee       	ldi	r24, 0xE4	; 228
  4e6:	90 e0       	ldi	r25, 0x00	; 0
  4e8:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
@@ -950,11 +921,11 @@ void display_menu(void)
  4ee:	80 e3       	ldi	r24, 0x30	; 48
  4f0:	0e 94 bf 00 	call	0x17e	; 0x17e <hx_set_coordinates>
 	
-	hx_write_char(hx_A);
+	hx_write_char(HX_ch_A);
  4f4:	84 ee       	ldi	r24, 0xE4	; 228
  4f6:	90 e0       	ldi	r25, 0x00	; 0
  4f8:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_7);
+	hx_write_char(HX_ch_7);
  4fc:	86 e6       	ldi	r24, 0x66	; 102
  4fe:	90 e0       	ldi	r25, 0x00	; 0
  500:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
@@ -976,11 +947,11 @@ void display_menu(void)
 	hx_send_data(0);
  522:	80 e0       	ldi	r24, 0x00	; 0
  524:	0e 94 52 00 	call	0xa4	; 0xa4 <hx_send_data>
-	hx_write_char(hx_N);
+	hx_write_char(HX_ch_N);
  528:	8a eb       	ldi	r24, 0xBA	; 186
  52a:	90 e0       	ldi	r25, 0x00	; 0
  52c:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_A);
+	hx_write_char(HX_ch_A);
  530:	84 ee       	ldi	r24, 0xE4	; 228
  532:	90 e0       	ldi	r25, 0x00	; 0
  534:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
@@ -990,11 +961,11 @@ void display_menu(void)
  53a:	80 e3       	ldi	r24, 0x30	; 48
  53c:	0e 94 bf 00 	call	0x17e	; 0x17e <hx_set_coordinates>
 	
-	hx_write_char(hx_A);
+	hx_write_char(HX_ch_A);
  540:	84 ee       	ldi	r24, 0xE4	; 228
  542:	90 e0       	ldi	r25, 0x00	; 0
  544:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_8);
+	hx_write_char(HX_ch_8);
  548:	80 e6       	ldi	r24, 0x60	; 96
  54a:	90 e0       	ldi	r25, 0x00	; 0
  54c:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
@@ -1016,11 +987,11 @@ void display_menu(void)
 	hx_send_data(0);
  56e:	80 e0       	ldi	r24, 0x00	; 0
  570:	0e 94 52 00 	call	0xa4	; 0xa4 <hx_send_data>
-	hx_write_char(hx_N);
+	hx_write_char(HX_ch_N);
  574:	8a eb       	ldi	r24, 0xBA	; 186
  576:	90 e0       	ldi	r25, 0x00	; 0
  578:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-	hx_write_char(hx_A);
+	hx_write_char(HX_ch_A);
  57c:	84 ee       	ldi	r24, 0xE4	; 228
  57e:	90 e0       	ldi	r25, 0x00	; 0
  580:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
@@ -1127,19 +1098,19 @@ int main(void)
  616:	87 95       	ror	r24
  618:	8e 5e       	subi	r24, 0xEE	; 238
  61a:	0e 94 bf 00 	call	0x17e	; 0x17e <hx_set_coordinates>
-		hx_write_char(hx_0);
+		hx_write_char(HX_ch_0);
  61e:	80 e9       	ldi	r24, 0x90	; 144
  620:	90 e0       	ldi	r25, 0x00	; 0
  622:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-		hx_write_char(hx_0);
+		hx_write_char(HX_ch_0);
  626:	80 e9       	ldi	r24, 0x90	; 144
  628:	90 e0       	ldi	r25, 0x00	; 0
  62a:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-		hx_write_char(hx_0);
+		hx_write_char(HX_ch_0);
  62e:	80 e9       	ldi	r24, 0x90	; 144
  630:	90 e0       	ldi	r25, 0x00	; 0
  632:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>
-		hx_write_char(hx_0);
+		hx_write_char(HX_ch_0);
  636:	80 e9       	ldi	r24, 0x90	; 144
  638:	90 e0       	ldi	r25, 0x00	; 0
  63a:	0e 94 fa 00 	call	0x1f4	; 0x1f4 <hx_write_char>

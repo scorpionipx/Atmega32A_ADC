@@ -8,6 +8,7 @@
 #include "global.h"
 #include "hx1230.h"
 #include <util/delay.h>
+#include "hx_8x6_characters.h"
 
 void init_hx1230_control(void)
 {
@@ -146,10 +147,10 @@ void hx_fill_screen(void)
 	}
 }
 
-void hx_write_char(const unsigned char *_character)
+void hx_write_char(const hx_8x6_character _character)
 {
 	for(int row_index = 0; row_index < 6; row_index ++)
 	{
-		hx_send_data((unsigned char)_character[row_index]);
+		hx_send_data(_character[row_index]);
 	}
 }

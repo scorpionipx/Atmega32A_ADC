@@ -324,29 +324,52 @@ END GROUP
  *(.data*)
  *(.rodata)
  *(.rodata*)
- .rodata.hx_8   0x00800060        0x6 main.o
- .rodata.hx_7   0x00800066        0x6 main.o
- .rodata.hx_6   0x0080006c        0x6 main.o
- .rodata.hx_5   0x00800072        0x6 main.o
- .rodata.hx_4   0x00800078        0x6 main.o
- .rodata.hx_3   0x0080007e        0x6 main.o
- .rodata.hx_2   0x00800084        0x6 main.o
- .rodata.hx_1   0x0080008a        0x6 main.o
- .rodata.hx_0   0x00800090        0x6 main.o
- .rodata.hx_X   0x00800096        0x6 main.o
- .rodata.hx_T   0x0080009c        0x6 main.o
- .rodata.hx_S   0x008000a2        0x6 main.o
- .rodata.hx_R   0x008000a8        0x6 main.o
- .rodata.hx_P   0x008000ae        0x6 main.o
- .rodata.hx_O   0x008000b4        0x6 main.o
- .rodata.hx_N   0x008000ba        0x6 main.o
- .rodata.hx_M   0x008000c0        0x6 main.o
- .rodata.hx_I   0x008000c6        0x6 main.o
- .rodata.hx_G   0x008000cc        0x6 main.o
- .rodata.hx_E   0x008000d2        0x6 main.o
- .rodata.hx_D   0x008000d8        0x6 main.o
- .rodata.hx_C   0x008000de        0x6 main.o
- .rodata.hx_A   0x008000e4        0x6 main.o
+ .rodata.HX_ch_8
+                0x00800060        0x6 main.o
+ .rodata.HX_ch_7
+                0x00800066        0x6 main.o
+ .rodata.HX_ch_6
+                0x0080006c        0x6 main.o
+ .rodata.HX_ch_5
+                0x00800072        0x6 main.o
+ .rodata.HX_ch_4
+                0x00800078        0x6 main.o
+ .rodata.HX_ch_3
+                0x0080007e        0x6 main.o
+ .rodata.HX_ch_2
+                0x00800084        0x6 main.o
+ .rodata.HX_ch_1
+                0x0080008a        0x6 main.o
+ .rodata.HX_ch_0
+                0x00800090        0x6 main.o
+ .rodata.HX_ch_X
+                0x00800096        0x6 main.o
+ .rodata.HX_ch_T
+                0x0080009c        0x6 main.o
+ .rodata.HX_ch_S
+                0x008000a2        0x6 main.o
+ .rodata.HX_ch_R
+                0x008000a8        0x6 main.o
+ .rodata.HX_ch_P
+                0x008000ae        0x6 main.o
+ .rodata.HX_ch_O
+                0x008000b4        0x6 main.o
+ .rodata.HX_ch_N
+                0x008000ba        0x6 main.o
+ .rodata.HX_ch_M
+                0x008000c0        0x6 main.o
+ .rodata.HX_ch_I
+                0x008000c6        0x6 main.o
+ .rodata.HX_ch_G
+                0x008000cc        0x6 main.o
+ .rodata.HX_ch_E
+                0x008000d2        0x6 main.o
+ .rodata.HX_ch_D
+                0x008000d8        0x6 main.o
+ .rodata.HX_ch_C
+                0x008000de        0x6 main.o
+ .rodata.HX_ch_A
+                0x008000e4        0x6 main.o
  *(.gnu.linkonce.d*)
                 0x008000ea                . = ALIGN (0x2)
                 0x008000ea                _edata = .
@@ -444,26 +467,26 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x1c09
+.debug_info     0x00000000     0x1f57
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x4e6 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega32a/avr5/crtatmega32a.o
  .debug_info    0x000004e6       0xb7 adc_driver.o
- .debug_info    0x0000059d      0x454 hx1230.o
- .debug_info    0x000009f1     0x1218 main.o
+ .debug_info    0x0000059d      0x7a7 hx1230.o
+ .debug_info    0x00000d44     0x1213 main.o
 
-.debug_abbrev   0x00000000      0x811
+.debug_abbrev   0x00000000      0x832
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x4a3 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega32a/avr5/crtatmega32a.o
  .debug_abbrev  0x000004a3       0x7a adc_driver.o
- .debug_abbrev  0x0000051d      0x15f hx1230.o
- .debug_abbrev  0x0000067c      0x195 main.o
+ .debug_abbrev  0x0000051d      0x180 hx1230.o
+ .debug_abbrev  0x0000069d      0x195 main.o
 
-.debug_line     0x00000000      0xa2f
+.debug_line     0x00000000      0xa46
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x115 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega32a/avr5/crtatmega32a.o
  .debug_line    0x00000115       0xe5 adc_driver.o
- .debug_line    0x000001fa      0x328 hx1230.o
- .debug_line    0x00000522      0x50d main.o
+ .debug_line    0x000001fa      0x33f hx1230.o
+ .debug_line    0x00000539      0x50d main.o
 
 .debug_frame    0x00000000      0x138
  *(.debug_frame)
@@ -471,15 +494,15 @@ END GROUP
  .debug_frame   0x00000034       0xb8 hx1230.o
  .debug_frame   0x000000ec       0x4c main.o
 
-.debug_str      0x00000000      0x4fa
+.debug_str      0x00000000      0x5d3
  *(.debug_str)
  .debug_str     0x00000000      0x196 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega32a/avr5/crtatmega32a.o
  .debug_str     0x00000196      0x179 adc_driver.o
                                 0x1ad (size before relaxing)
- .debug_str     0x0000030f       0xec hx1230.o
-                                0x276 (size before relaxing)
- .debug_str     0x000003fb       0xff main.o
-                                0x34b (size before relaxing)
+ .debug_str     0x0000030f      0x282 hx1230.o
+                                0x3ab (size before relaxing)
+ .debug_str     0x00000591       0x42 main.o
+                                0x3c3 (size before relaxing)
 
 .debug_loc      0x00000000      0x655
  *(.debug_loc)
