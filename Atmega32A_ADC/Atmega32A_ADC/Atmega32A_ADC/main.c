@@ -39,7 +39,7 @@ int main(void)
 		adc_value = ADC_get_value(adc_channel);
 		
 		hx_set_coordinates((adc_channel / 4) * HX_MAX_COL / 2 + 18, (adc_channel % 4) + 3);
-		hx_write_char(HX_ch_0);
+		hx_write_char(HX_ch_1);
 		hx_write_char(HX_ch_0);
 		hx_write_char(HX_ch_0);
 		hx_write_char(HX_ch_0);
