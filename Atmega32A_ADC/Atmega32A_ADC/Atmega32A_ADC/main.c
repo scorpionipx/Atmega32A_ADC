@@ -40,7 +40,11 @@ int main(void)
 		
 		hx_set_coordinates((adc_channel / 4) * HX_MAX_COL / 2 + 18, (adc_channel % 4) + 3);
 <<<<<<< HEAD
+<<<<<<< HEAD
 		hx_write_char(HX_ch_1);
+=======
+		hx_write_char(HX_ch_0);
+>>>>>>> parent of d11fbbf... Updated 8x6 characters
 =======
 		hx_write_char(HX_ch_0);
 >>>>>>> parent of d11fbbf... Updated 8x6 characters

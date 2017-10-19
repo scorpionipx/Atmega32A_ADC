@@ -1099,8 +1099,13 @@ int main(void)
  618:	8e 5e       	subi	r24, 0xEE	; 238
  61a:	0e 94 bf 00 	call	0x17e	; 0x17e <hx_set_coordinates>
 <<<<<<< HEAD
+<<<<<<< HEAD
 		hx_write_char(HX_ch_1);
  61e:	8a e8       	ldi	r24, 0x8A	; 138
+=======
+		hx_write_char(HX_ch_0);
+ 61e:	80 e9       	ldi	r24, 0x90	; 144
+>>>>>>> parent of d11fbbf... Updated 8x6 characters
 =======
 		hx_write_char(HX_ch_0);
  61e:	80 e9       	ldi	r24, 0x90	; 144
